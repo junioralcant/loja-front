@@ -36,8 +36,8 @@ const Routes = () => (
       <PrivateRoute path="/clientes" component={ClienteList} />
       <PrivateRoute exact path="/notahome" component={NotaHome} />
       <PrivateRoute path="/notahome/:id" component={NotaHome} />
-      <PrivateRoute path="/notacompra" component={NotaComprar} />
-      <PrivateRoute exact path="/notacompra/:id" component={NotaComprar} />
+      <PrivateRoute exact path="/notacompra" component={NotaComprar} />
+      <PrivateRoute path="/notacompra/:id" component={NotaComprar} />
       <PrivateRoute exact path="/notapagar" component={NotaPagar} />
       <PrivateRoute path="/notapagar/:id" component={NotaPagar} />
       <PrivateRoute path="/notadetalhe" component={NotaDetalhes} />

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input } from "unform";
+import { formatToTimeZone } from "date-fns-timezone";
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
 
@@ -11,9 +12,20 @@ import api from "../../services/api";
 
 export default function NotaComprar({ ...props }) {
   const [data, setData] = useState({});
+  const [cliente, setCliente] = useState();
 
   const { history, location, match } = props;
-  const { cliente } = location.state;
+
+  useEffect(() => {
+    if (!match.params.id) {
+      const { cliente } = location.state;
+      setCliente(cliente);
+    } else {
+      setCliente(data.cliente);
+    }
+  }, [match.params.id, data.cliente, location.state]);
+
+  console.log(cliente);
 
   async function handlerSubmit(data) {
     if (!match.params.id) {
@@ -25,7 +37,9 @@ export default function NotaComprar({ ...props }) {
           data.cliente = cliente;
           await api.postOrPut("/notascompras", match.params.id, data);
           toastr.success(`Compra cadastrado com sucesso!
+
           `);
+          history.push("/notahome");
         } catch (error) {
           toastr.error(error.response.data.error);
         }
@@ -35,7 +49,7 @@ export default function NotaComprar({ ...props }) {
         data.cliente = cliente;
         await api.postOrPut("/notascompras", match.params.id, data);
         toastr.success(`Alteração feita com sucesso!`);
-        history.push("/notadespesaspp");
+        history.push("/notahome");
       } catch (error) {
         toastr.error(error.response.data.error);
       }
@@ -56,6 +70,23 @@ export default function NotaComprar({ ...props }) {
       loadData();
     }
   }, [match.params, match.params.id]);
+
+  useEffect(
+    () => {
+      if (match.params.id) {
+        const dataNote = formatToTimeZone(data.data, "YYYY-MM-DD", {
+          timeZone: "Europe/Berlin"
+        });
+
+        setData({
+          ...data,
+          data: dataNote
+        });
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [data.data, match.params.id]
+  );
 
   return (
     <div className="container-fluid">
