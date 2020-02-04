@@ -34,11 +34,13 @@ const Routes = () => (
       <PrivateRoute path="/clientes/edit/:id" component={ClienteForm} />
       <PrivateRoute path="/clientes/show/:id" component={ClienteShow} />
       <PrivateRoute path="/clientes" component={ClienteList} />
-      <Route path="/notahome" component={NotaHome} />
-      <Route path="/notacompra" component={NotaComprar} />
-      <Route exact path="/notapagar" component={NotaPagar} />
-      <Route exact path="/notapagar/:id" component={NotaPagar} />
-      <Route path="/notadetalhe" component={NotaDetalhes} />
+      <PrivateRoute exact path="/notahome" component={NotaHome} />
+      <PrivateRoute path="/notahome/:id" component={NotaHome} />
+      <PrivateRoute path="/notacompra" component={NotaComprar} />
+      <PrivateRoute exact path="/notacompra/:id" component={NotaComprar} />
+      <PrivateRoute exact path="/notapagar" component={NotaPagar} />
+      <PrivateRoute path="/notapagar/:id" component={NotaPagar} />
+      <PrivateRoute path="/notadetalhe" component={NotaDetalhes} />
 
       <Route path="*" component={() => <h1>Page not found</h1>} />
     </Switch>

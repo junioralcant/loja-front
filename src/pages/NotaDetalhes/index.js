@@ -32,7 +32,7 @@ export default function NotaDetalhes({ ...props }) {
                   <td>130 R$</td>
                   <td>12-03-2019</td>
                   <td>
-                    <Link to={`/notapagar/`}>
+                    <Link to={`/notapagar/1`}>
                       <IoMdCreate />
                     </Link>
                     <Link

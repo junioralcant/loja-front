@@ -39,6 +39,11 @@ export default function Sidebar({ history }) {
               Listar Clientes <span className="sr-only">(current)</span>
             </Link>
           </li>
+          <li className="nav-item ">
+            <Link className="nav-link" to="/notahome">
+              Notas <span className="sr-only">(current)</span>
+            </Link>
+          </li>
         </ul>
         <button className="btn btn btn-danger my-2 my-sm-0" onClick={sair}>
           Sair
