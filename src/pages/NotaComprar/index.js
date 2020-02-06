@@ -25,8 +25,6 @@ export default function NotaComprar({ ...props }) {
     }
   }, [match.params.id, data.cliente, location.state]);
 
-  console.log(cliente);
-
   async function handlerSubmit(data) {
     if (!match.params.id) {
       if (!data.valorCompra || !data.data) {

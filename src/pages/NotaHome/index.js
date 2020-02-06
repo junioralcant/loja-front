@@ -60,6 +60,12 @@ export default function NotaHome({ ...props }) {
       : history.push("/notacompra", { cliente: selectCliente });
   }
 
+  function pagar() {
+    !selectCliente
+      ? toastr.error(`Selecione um cliente.`)
+      : history.push("/notapagar", { cliente: selectCliente });
+  }
+
   return (
     <div className="container-fluid">
       <div className="col-md-12">
@@ -92,7 +98,7 @@ export default function NotaHome({ ...props }) {
                 </button>
                 <button
                   className="btn btn-primary ml-1"
-                  onClick={() => history.push("/notapagar")}
+                  onClick={() => pagar()}
                 >
                   Pagar
                 </button>
