@@ -12,6 +12,7 @@ import api from "../../services/api";
 export default function NotaPagar({ ...props }) {
   const [data, setData] = useState({});
   const [cliente, setCliente] = useState();
+  const [notas, setNotas] = useState([]);
 
   const { history, match, location } = props;
 
@@ -68,6 +69,20 @@ export default function NotaPagar({ ...props }) {
     }
   }, [match.params, match.params.id]);
 
+  useEffect(() => {
+    async function loadNotas() {
+      if (match.params.id) {
+        const response = await api.get(`/notascompras?cliente=${data.cliente}`);
+        setNotas(response.data);
+      } else {
+        const response = await api.get(`/notascompras?cliente=${cliente}`);
+        setNotas(response.data);
+      }
+    }
+
+    loadNotas();
+  }, [data.cliente, match.params.id, cliente]);
+
   useEffect(
     () => {
       if (match.params.id) {
@@ -103,7 +118,11 @@ export default function NotaPagar({ ...props }) {
         >
           <div className="card-header">Realizar Pagamento</div>
           <div className="card-body">
-            <h5 className="card-title">Saldo devedor: 5000R$</h5>
+            {notas.map(n => (
+              <h5 key={n.saldoDevedor} className="card-title">
+                Saldo devedor: {n.saldoDevedor} R$
+              </h5>
+            ))}
             <Form initialData={data} onSubmit={handlerSubmit}>
               <Input
                 className="form-control"

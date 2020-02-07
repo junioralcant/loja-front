@@ -97,7 +97,7 @@ export default function NotaDetalhes({ ...props }) {
             </table>
             <br />
             {notas.map(n => (
-              <h5 key={n._id} className="card-title">
+              <h5 key={n.saldoDevedor} className="card-title">
                 Saldo devedor: {n.saldoDevedor} R$
               </h5>
             ))}
