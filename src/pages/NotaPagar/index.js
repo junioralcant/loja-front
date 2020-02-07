@@ -36,7 +36,7 @@ export default function NotaPagar({ ...props }) {
           toastr.success(`Pagamento cadastrado com sucesso!
 
           `);
-          history.push("/notahome");
+          history.push("/notadetalhe", { cliente: data.cliente });
         } catch (error) {
           toastr.error(error.response.data.error);
         }
@@ -46,7 +46,7 @@ export default function NotaPagar({ ...props }) {
         data.cliente = cliente;
         await api.postOrPut("/notascompras", match.params.id, data);
         toastr.success(`Alteração feita com sucesso!`);
-        history.push("/notahome");
+        history.push("/notadetalhe", { cliente: data.cliente });
       } catch (error) {
         toastr.error(error.response.data.error);
       }
@@ -86,7 +86,9 @@ export default function NotaPagar({ ...props }) {
   );
 
   function voltar() {
-    !match.params.id ? history.push("/notahome") : history.push("/notadetalhe");
+    !match.params.id
+      ? history.push("/notahome")
+      : history.push("/notadetalhe", { cliente: data.cliente });
   }
 
   return (

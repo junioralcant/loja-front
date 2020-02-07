@@ -66,6 +66,12 @@ export default function NotaHome({ ...props }) {
       : history.push("/notapagar", { cliente: selectCliente });
   }
 
+  function detalhes() {
+    !selectCliente
+      ? toastr.error(`Selecione um cliente.`)
+      : history.push("/notadetalhe", { cliente: selectCliente });
+  }
+
   return (
     <div className="container-fluid">
       <div className="col-md-12">
@@ -104,7 +110,7 @@ export default function NotaHome({ ...props }) {
                 </button>
                 <button
                   className="btn btn-primary ml-1"
-                  onClick={() => history.push("/notadetalhe")}
+                  onClick={() => detalhes()}
                 >
                   Detalhes
                 </button>

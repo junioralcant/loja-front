@@ -1,14 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { IoIosTrash, IoMdCreate } from "react-icons/io";
 import { Link } from "react-router-dom";
+import { formatToTimeZone } from "date-fns-timezone";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap";
 
 import Sidebar from "../../components/Sidebar";
+import api from "../../services/api";
 
 export default function NotaDetalhes({ ...props }) {
-  const { history } = props;
+  const [notas, setNotas] = useState([]);
+  const { history, location } = props;
+  const id = location.state.cliente;
+
+  useEffect(() => {
+    async function loadNotas() {
+      const response = await api.get(`/notascompras?cliente=${id}`);
+      setNotas(response.data);
+    }
+
+    loadNotas();
+  }, [id]);
 
   return (
     <div className="container-fluid">
@@ -16,112 +29,78 @@ export default function NotaDetalhes({ ...props }) {
         <Sidebar {...props} />
       </div>
       <div className="row justify-content-center mt-5">
-        <div class="card text-white bg-dark mb-3" style={{ maxWidth: "22rem" }}>
-          <div class="card-header">Detalhes</div>
-          <div class="card-body">
+        <div
+          className="card text-white bg-dark mb-3"
+          style={{ maxWidth: "50rem" }}
+        >
+          <div className="card-header">Detalhes</div>
+          <div className="card-body">
             <table className="table table-striped table-dark">
               <thead>
                 <tr>
                   <th>Pagamentos/Compra</th>
                   <th>Data</th>
+                  <th>Vendedor</th>
                   <th>Ação</th>
                 </tr>
               </thead>
               <tbody>
-                <tr style={{ color: "yellow" }}>
-                  <td>130 R$</td>
-                  <td>12-03-2019</td>
-                  <td>
-                    <Link to={`/notapagar/1`}>
-                      <IoMdCreate />
-                    </Link>
-                    <Link
-                      to="#"
-                      onClick={() => {
-                        if (
-                          window.confirm(
-                            `Desaja excluir nota do cliente Junior Marques ?`
-                          )
-                        )
-                          console.log("Excluido");
-                      }}
-                    >
-                      <IoIosTrash />
-                    </Link>
-                  </td>
-                </tr>
-                <tr style={{ color: "yellow" }}>
-                  <td>150 R$</td>
-                  <td>12-03-2019</td>
-                  <td>
-                    <Link to={`/notapagar/34234123`}>
-                      <IoMdCreate />
-                    </Link>
-                    <Link
-                      to="#"
-                      onClick={() => {
-                        if (
-                          window.confirm(
-                            `Desaja excluir nota do cliente Junior Marques ?`
-                          )
-                        )
-                          console.log("Excluido");
-                      }}
-                    >
-                      <IoIosTrash />
-                    </Link>
-                  </td>
-                </tr>
+                {notas.map(nota => {
+                  return nota.notaCompra.map(nc => {
+                    var amarelo = "";
+                    var url = "";
+                    if (nc.valorCompra > 0 && nc.valorAv <= 0) {
+                      amarelo = "yellow";
+                      url = "notacompra";
+                    } else {
+                      amarelo = "#48A60B";
+                      url = "notapagar";
+                    }
 
-                <tr style={{ color: "#66ff66" }}>
-                  <td>150 R$</td>
-                  <td>12-03-2019</td>
-                  <td>
-                    <Link to={`/notapagar/12341234`}>
-                      <IoMdCreate />
-                    </Link>
-                    <Link
-                      to="#"
-                      onClick={() => {
-                        if (
-                          window.confirm(
-                            `Desaja excluir nota do cliente Junior Marques ?`
-                          )
-                        )
-                          console.log("Excluido");
-                      }}
-                    >
-                      <IoIosTrash />
-                    </Link>
-                  </td>
-                </tr>
+                    const dataNota = formatToTimeZone(nc.data, "DD-MM-YYYY", {
+                      timeZone: "Europe/Berlin"
+                    });
 
-                <tr style={{ color: "#66ff66" }}>
-                  <td>150 R$</td>
-                  <td>12-03-2019</td>
-                  <td>
-                    <Link to={`/notapagar/12341`}>
-                      <IoMdCreate />
-                    </Link>
-                    <Link
-                      to="#"
-                      onClick={() => {
-                        if (
-                          window.confirm(
-                            `Desaja excluir nota do cliente Junior Marques ?`
-                          )
-                        )
-                          console.log("Excluido");
-                      }}
-                    >
-                      <IoIosTrash />
-                    </Link>
-                  </td>
-                </tr>
+                    return (
+                      <tr key={nc._id} style={{ color: amarelo }}>
+                        <td>
+                          {nc.valorCompra > 0 && nc.valorAv <= 0
+                            ? nc.valorCompra
+                            : nc.valorAv}{" "}
+                          R$
+                        </td>
+                        <td>{dataNota}</td>
+                        <td>{nc.vendedor}</td>
+                        <td>
+                          <Link to={`/${url}/${nc._id}`}>
+                            <IoMdCreate />
+                          </Link>
+                          <Link
+                            to="#"
+                            onClick={() => {
+                              if (
+                                window.confirm(
+                                  `Desaja excluir nota do cliente Junior Marques ?`
+                                )
+                              )
+                                console.log("Excluido");
+                            }}
+                          >
+                            <IoIosTrash />
+                          </Link>
+                        </td>
+                      </tr>
+                    );
+                  });
+                })}
               </tbody>
             </table>
             <br />
-            <h5 className="card-title">Saldo devedor: 100R$</h5>
+            {notas.map(n => (
+              <h5 key={n._id} className="card-title">
+                Saldo devedor: {n.saldoDevedor} R$
+              </h5>
+            ))}
             <br />
             <div className="row justify-content-center ">
               <div>
@@ -131,7 +110,6 @@ export default function NotaDetalhes({ ...props }) {
                 >
                   Voltar
                 </button>
-                <button className="btn btn-primary ml-1">Salvar</button>
               </div>
             </div>
 

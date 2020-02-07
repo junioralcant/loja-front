@@ -37,7 +37,7 @@ export default function NotaComprar({ ...props }) {
           toastr.success(`Compra cadastrado com sucesso!
 
           `);
-          history.push("/notahome");
+          history.push("/notadetalhe", { cliente: data.cliente });
         } catch (error) {
           toastr.error(error.response.data.error);
         }
@@ -47,7 +47,7 @@ export default function NotaComprar({ ...props }) {
         data.cliente = cliente;
         await api.postOrPut("/notascompras", match.params.id, data);
         toastr.success(`Alteração feita com sucesso!`);
-        history.push("/notahome");
+        history.push("/notadetalhe", { cliente: data.cliente });
       } catch (error) {
         toastr.error(error.response.data.error);
       }
@@ -85,6 +85,12 @@ export default function NotaComprar({ ...props }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [data.data, match.params.id]
   );
+
+  function voltar() {
+    !match.params.id
+      ? history.push("/notahome")
+      : history.push("/notadetalhe", { cliente: data.cliente });
+  }
 
   return (
     <div className="container-fluid">
@@ -129,10 +135,7 @@ export default function NotaComprar({ ...props }) {
 
               <div className="row justify-content-center ">
                 <div>
-                  <button
-                    className="btn btn-primary "
-                    onClick={() => history.push("/notahome")}
-                  >
+                  <button className="btn btn-primary " onClick={() => voltar()}>
                     Voltar
                   </button>
                   <button type="submit" className="btn btn-primary ml-1">
